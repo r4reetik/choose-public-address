@@ -12,6 +12,20 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
+func checkKey(key string) {
+	if len(key) >= 40 || len(key) < 1 {
+		fmt.Println("Invalid address length.")
+		os.Exit(404)
+	}
+
+	for _, c := range key {
+		if (c < '0' || c > '9') && (c < 'a' || c > 'f') {
+			fmt.Println("Invalid value for address.")
+			os.Exit(404)
+		}
+	}
+}
+
 func bruteforce(process *int, key string, keyLen int, mu *sync.RWMutex) {
 	privateKey, err := crypto.GenerateKey()
 	if err != nil {
@@ -47,6 +61,7 @@ func main() {
 	lag := 0
 	
 	key := string(bytes.ToLower([]byte(os.Args[1])))
+	checkKey(key)
 	keyLen := len(key) + 2
 	
 	do := true
